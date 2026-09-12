@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>끄적끄적문구 사무실</title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: white;
+	background-color: black;
+	overflow: hidden;
+	touch-action: none;
+}
+
+#canvas {
+	display: block;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status, #status-splash, #status-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+#status, #status-splash {
+	top: 0;
+	bottom: 0;
+}
+
+#status {
+	background-color: #242424;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+}
+
+#status-splash {
+	max-height: 100%;
+	max-width: 100%;
+	margin: auto;
+}
+
+#status-progress, #status-notice {
+	display: none;
+}
+
+#status-progress {
+	bottom: 10%;
+	width: 50%;
+	margin: 0 auto;
+}
+
+#status-notice {
+	background-color: #5b3943;
+	border-radius: 0.5rem;
+	border: 1px solid #9b3943;
+	color: #e0e0e0;
+	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+	line-height: 1.3;
+	margin: 0 2rem;
+	overflow: hidden;
+	padding: 1rem;
+	text-align: center;
+	z-index: 1;
+}
+		</style>
+		<style>
+			#gate {
+				position: absolute; inset: 0; z-index: 10;
+				display: flex; align-items: center; justify-content: center;
+				background: #e9e2d4;
+				font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+				color: #5c4a3a;
+			}
+			#gate-box { text-align: center; max-width: 22rem; padding: 1.5rem; }
+			#gate h1 { font-size: 1.35rem; margin: 0 0 .35rem; }
+			#gate-sub { font-size: .8rem; color: #8a7a68; margin: 0 0 1.4rem; line-height: 1.5; }
+			#gate button {
+				font: inherit; font-size: .9rem; cursor: pointer;
+				padding: .6rem 1.1rem; border-radius: 6px;
+				border: 1px solid #c9b99f; background: #fbf7ee; color: #5c4a3a;
+			}
+			#gate button:hover { background: #fff; }
+			#gate button:disabled { opacity: .5; cursor: default; }
+			#gate-google { width: 100%; margin-bottom: .9rem; }
+			#gate .quiet { border-color: transparent; background: none; font-size: .8rem; color: #8a7a68; }
+			#gate-err { font-size: .78rem; color: #a8503c; min-height: 1.2em; margin: 0 0 .6rem; line-height: 1.45; }
+			#gate .fine { font-size: .72rem; color: #a89880; margin: .5rem 0 0; }
+		</style>
+		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+
+	</head>
+	<body>
+		<canvas id="canvas">
+			Your browser does not support the canvas tag.
+		</canvas>
+
+		<noscript>
+			Your browser does not support JavaScript.
+		</noscript>
+
+		<!-- ───────── 로그인 게이트 ─────────
+		     Godot 이 뜨기 **전에** 여기서 로그인한다.
+		     엔진 안에서 로그인 창을 띄우면 브라우저가 팝업으로 보고 막을 때가 있다 —
+		     Godot 은 입력을 자기 루프에서 처리해서 "사람이 방금 눌렀다" 는 맥락을
+		     놓치기 때문이다. 평범한 웹페이지 버튼이면 그럴 일이 없다.
+		     로그인이 끝나야 엔진을 시작하므로, 36MB 를 받는 동안 로그인 창을 볼 수도 있다. -->
+		<div id="gate">
+			<div id="gate-box">
+				<h1>끄적끄적문구 사무실</h1>
+				<p id="gate-sub">어느 기기에서 열어도 같은 사무실이 나오도록 저장을 함께 씁니다.</p>
+				<button id="gate-google">구글 계정으로 들어가기</button>
+				<p id="gate-err"></p>
+				<button id="gate-skip" class="quiet">이 기기에서만 하기</button>
+				<p class="fine">이 기기에서만 하면 그동안의 진행은 공유되지 않습니다.</p>
+			</div>
+		</div>
+
+		<div id="status">
+			<img id="status-splash" src="index.png" alt="">
+			<progress id="status-progress"></progress>
+			<div id="status-notice"></div>
+		</div>
+
+		<script src="index.js"></script>
+		<script>
+// Firebase 접속 설정. 비밀이 아니다 — 막는 것은 Firestore 규칙과 로그인이다.
+// scripts/net/FirebaseConfig.gd 와 **같은 값**이어야 한다 (cloudtest 가 확인한다).
+const OFFICE_FIREBASE = {
+	apiKey: 'AIzaSyDLPKxmqTH2SuyebReO1dE16Bqa6gNP0Bs',
+	authDomain: 'our-office-jkjh.firebaseapp.com',
+	projectId: 'our-office-jkjh',
+};
+
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":1551168,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_THREADS_ENABLED = false;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusNotice = document.getElementById('status-notice');
+
+	let initializing = true;
+	let statusMode = '';
+
+	function setStatusMode(mode) {
+		if (statusMode === mode || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			initializing = false;
+			return;
+		}
+		statusOverlay.style.visibility = 'visible';
+		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+		statusMode = mode;
+	}
+
+	function setStatusNotice(text) {
+		while (statusNotice.lastChild) {
+			statusNotice.removeChild(statusNotice.lastChild);
+		}
+		const lines = text.split('\n');
+		lines.forEach((line) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			statusNotice.appendChild(document.createElement('br'));
+		});
+	}
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		if (err instanceof Error) {
+			setStatusNotice(err.message);
+		} else if (typeof err === 'string') {
+			setStatusNotice(err);
+		} else {
+			setStatusNotice('An unknown error occured');
+		}
+		setStatusMode('notice');
+		initializing = false;
+	}
+
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			// There's a chance that installing the service worker would fix the issue
+			Promise.race([
+				navigator.serviceWorker.getRegistration().then((registration) => {
+					if (registration != null) {
+						return Promise.reject(new Error('Service worker already exists.'));
+					}
+					return registration;
+				}).then(() => engine.installServiceWorker()),
+				// For some reason, `getRegistration()` can stall
+				new Promise((resolve) => {
+					setTimeout(() => resolve(), 2000);
+				}),
+			]).catch((err) => {
+				console.error('Error while registering service worker:', err);
+			}).then(() => {
+				window.location.reload();
+			});
+		} else {
+			// Display the message as usual
+			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
+			displayFailureNotice(missingMsg + missing.join('\n'));
+		}
+	} else {
+		// 로그인이 끝난 뒤에 엔진을 시작한다 (아래 gate 참고)
+		window.__officeStart = startEngine;
+		gate();
+	}
+
+	function startEngine() {
+		setStatusMode('progress');
+		return engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					statusProgress.value = current;
+					statusProgress.max = total;
+				} else {
+					statusProgress.removeAttribute('value');
+					statusProgress.removeAttribute('max');
+				}
+			},
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+
+	// ───────── 로그인 게이트 ─────────
+	//
+	// 설정이 비어 있으면 그냥 게임을 시작한다. 서버 없이도 온전해야 한다는 원칙 그대로다.
+	// 이미 로그인돼 있으면 화면을 보여주지 않고 바로 넘어간다.
+	function gate() {
+		const box = document.getElementById('gate');
+		const btn = document.getElementById('gate-google');
+		const skip = document.getElementById('gate-skip');
+		const err = document.getElementById('gate-err');
+
+		function go() {
+			box.remove();
+			window.__officeStart();
+		}
+
+		if (!OFFICE_FIREBASE.apiKey || !OFFICE_FIREBASE.projectId) {
+			go();
+			return;
+		}
+
+		skip.onclick = go;
+
+		let auth = null;
+		const ready = (async () => {
+			const [appMod, authMod] = await Promise.all([
+				import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+				import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
+			]);
+			const app = appMod.getApps().length ? appMod.getApps()[0] : appMod.initializeApp(OFFICE_FIREBASE);
+			auth = authMod.getAuth(app);
+			return authMod;
+		})();
+
+		// 지난번에 들어왔던 브라우저면 다시 묻지 않는다
+		ready.then((m) => new Promise((resolve) => {
+			const off = m.onAuthStateChanged(auth, (user) => { off(); resolve(user); });
+		})).then((user) => (user ? hand(user) : null)).catch(() => {});
+
+		// 게임 안 설정 화면에서 부른다. 로그아웃하면 페이지를 다시 열어
+		// 처음부터(로그인 화면부터) 시작한다 — 세션이 어중간하게 남는 것보다 낫다.
+		window.__office_signout = async () => {
+			try {
+				const m = await ready;
+				await m.signOut(auth);
+			} catch (e) {
+				console.error('signOut:', e);
+			}
+			window.__office_auth = null;
+			location.reload();
+		};
+
+		async function hand(user) {
+			window.__office_auth = {
+				ok: true,
+				idToken: await user.getIdToken(),
+				uid: user.uid,
+				email: user.email || '',
+				name: (user.displayName || (user.email || '').split('@')[0] || '누군가'),
+			};
+			await live(user).catch((e) => console.error('live chat:', e));
+			go();
+		}
+
+		// ───────── 실시간 채팅 ─────────
+		//
+		// Firestore 문서 하나(office/live)에 최근 메시지를 담아 두고 onSnapshot 으로 듣는다.
+		// REST 로는 이렇게 밀어 주는 것을 못 받는다. 여기는 이미 SDK 를 불러와 두었으니
+		// 듣는 것도 보내는 것도 자바스크립트 쪽에서 하고, 게임은 결과만 읽어 간다.
+		//
+		// 보낼 때 arrayUnion 을 쓴다. 둘이 동시에 쳐도 서로의 말을 지우지 않는다 —
+		// 문서를 통째로 다시 쓰면 나중 사람이 먼저 사람 것을 덮어쓴다.
+		async function live(user) {
+			const fs = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+			const db = fs.getFirestore(auth.app);
+			const ref = fs.doc(db, 'office', 'live');
+
+			fs.onSnapshot(ref, (snap) => {
+				const msgs = (snap.data() || {}).msgs || [];
+				window.__office_chat = JSON.stringify(msgs);
+			}, (e) => console.error('onSnapshot:', e));
+
+			window.__office_send = (room, from, body, color) => {
+				const entry = {
+					// 같은 밀리초에 둘이 쳐도 겹치지 않게 무작위를 섞는다
+					id: Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8),
+					room: room, from: from, body: body, color: color || '',
+					uid: user.uid, at: Date.now(),
+				};
+				fs.setDoc(ref, { msgs: fs.arrayUnion(entry) }, { merge: true })
+					.catch((e) => console.error('send:', e));
+			};
+
+			// 문서가 끝없이 자라지 않게 가끔 앞을 잘라 둔다.
+			// 둘이 동시에 자르면 하나가 헛돌 뿐 잃는 것은 없다.
+			window.__office_trim = async () => {
+				const snap = await fs.getDoc(ref);
+				const msgs = (snap.data() || {}).msgs || [];
+				if (msgs.length > 120) {
+					await fs.setDoc(ref, { msgs: msgs.slice(-60) }, { merge: true });
+				}
+			};
+		}
+
+		btn.onclick = async () => {
+			btn.disabled = true;
+			err.textContent = '';
+			try {
+				const m = await ready;
+				const res = await m.signInWithPopup(auth, new m.GoogleAuthProvider());
+				await hand(res.user);
+			} catch (e) {
+				btn.disabled = false;
+				err.textContent = explain(String((e && e.code) || e));
+			}
+		};
+	}
+
+	// 구글이 주는 코드는 그대로 보여줘도 알 수 없다. 셋은 할 일이 서로 다르다.
+	function explain(code) {
+		if (code.includes('popup-blocked')) {
+			return '브라우저가 로그인 창을 막았습니다. 팝업을 허용하고 다시 눌러주세요.';
+		}
+		if (code.includes('popup-closed') || code.includes('cancelled-popup')) {
+			return '로그인 창을 닫으셨습니다.';
+		}
+		if (code.includes('unauthorized-domain')) {
+			return '이 주소가 Firebase 승인된 도메인에 없습니다 (Authentication → Settings).';
+		}
+		if (code.includes('operation-not-allowed')) {
+			return '구글 로그인이 꺼져 있습니다 (Authentication → 로그인 방법).';
+		}
+		if (code.includes('network')) {
+			return '네트워크에 연결하지 못했습니다.';
+		}
+		return '로그인에 실패했습니다 — ' + code;
+	}
+}());
+		</script>
+	</body>
+</html>
+
