@@ -10,3 +10,20 @@
 
 ▶ 안드로이드: **https://sloven85.github.io/our-office-web/office.apk**
 (출처를 알 수 없는 앱 설치를 허용해야 깔립니다 — 스토어에 안 올린 APK라 그렇습니다)
+
+## 캐릭터 도트 편집실
+
+▶ **https://sloven85.github.io/our-office-web/sprite-editor.html?v=c848439**
+
+최실장·이노트·턱시도 업체 직원·현계산의 사용자 수정본 전체와
+턱시도 베이스 업체 직원 색상 변형을 포함한 33개 캐릭터를 편집합니다.
+JSON 저장·재열기와 PNG 저장, 기존 편집 파일 호환을 지원합니다.
+편집 자체는 게임/세이브에 자동 반영되지 않습니다.
+
+오프라인 파일: [sprite-editor-offline.html](https://sloven85.github.io/our-office-web/sprite-editor-offline.html).
+기존 `leenote-editor.html` 주소도 공용 편집실로 연결됩니다.
+
+소스 빌드: `c848439`. 카탈로그의 JS 주소는 내용 해시로 갱신합니다.
+편집실은 소스의 `godot/tools/build_sprite_editor.sh`로 패키징했습니다.
+현재 게임 CI가 이 저장소를 통째로 교체하므로, 자동 복사 연결 전에는
+게임 재배포 후 편집실 파일도 별도로 함께 다시 배포해야 합니다.
