@@ -1,0 +1,10 @@
+# 5분마다 새 빌드가 있는지 본다
+[Unit]
+Description=Check for a new Our-office build every 5 minutes
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target
