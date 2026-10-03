@@ -10,3 +10,19 @@
 
 ▶ 안드로이드: **https://sloven85.github.io/our-office-web/office.apk**
 (출처를 알 수 없는 앱 설치를 허용해야 깔립니다 — 스토어에 안 올린 APK라 그렇습니다)
+
+## 캐릭터 도트 편집실
+
+▶ **https://sloven85.github.io/our-office-web/sprite-editor.html?v=2aabe55**
+
+기존 33캐릭터 편집실과 다섯 캐릭터 사용자 수정본을 그대로 유지합니다.
+삼색/치즈 태비의 원래 무늬와 눈색도 유지합니다. JSON 저장·재열기, PNG 및 이전 파일 호환을 지원합니다.
+편집 자체는 게임/세이브를 자동으로 바꾸지 않습니다.
+
+오프라인 파일: [sprite-editor-offline.html](https://sloven85.github.io/our-office-web/sprite-editor-offline.html).
+기존 `leenote-editor.html` 주소도 공용 편집실로 연결됩니다.
+
+게임 소스 빌드: `2aabe55` (창고 일반 외벽과 지하와 맞춘 화물엘리베이터 외형·배치).
+편집실은 소스의 `godot/tools/build_sprite_editor.sh`로 패키징했습니다.
+현재 게임 CI가 이 저장소를 통째로 교체하므로, 자동 복사 연결 전에는
+게임 재배포 후 편집실 파일도 별도로 함께 다시 배포해야 합니다.
