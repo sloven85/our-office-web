@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>사무실 캐릭터 도트 편집실</title><link rel="icon" href="data:,">
+<style>
+:root{color-scheme:dark;--bg:#11151c;--panel:#1b222d;--line:#344052;--ink:#edf0f6;--muted:#a9b3c3;--accent:#f5b65b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,sans-serif}header{padding:22px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px}h1{font-size:23px;margin:0}h2{font-size:15px;margin:0 0 12px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--accent);margin-bottom:4px}.sub{color:var(--muted);font-size:12px}.badge{border:1px solid #7c603c;padding:5px 10px;border-radius:20px;color:var(--accent);white-space:nowrap}main{padding:20px;display:grid;grid-template-columns:260px minmax(330px,1fr) 270px;gap:16px;max-width:1500px;margin:auto}.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}.stack{display:grid;gap:16px;align-content:start}label{display:block;margin:10px 0 5px;color:var(--muted);font-size:12px}select,input[type=text],button{font:inherit;color:var(--ink);background:#232c3a;border:1px solid #45526a;border-radius:7px;padding:9px;max-width:100%}select{width:100%}button{cursor:pointer}button:hover{background:#344258}button:disabled{opacity:.4;cursor:default}button.active,.primary{background:#8b5823;border-color:var(--accent)}.row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.tools{display:grid;grid-template-columns:1fr 1fr;gap:6px}.palette{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:12px}.swatch{height:25px;padding:0;border:1px solid #7b879a;border-radius:4px}.swatch.selected{outline:2px solid var(--accent);outline-offset:2px}input[type=color]{width:44px;height:35px;padding:2px;border:1px solid var(--line);background:none}#hex{width:112px}.canvas-panel{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}.canvas-top{width:100%;display:flex;justify-content:space-between;gap:10px;align-items:center}.board-wrap{max-width:100%;overflow:auto;background:#131a24;padding:12px;border-radius:8px}#board{display:block;image-rendering:pixelated;touch-action:none;cursor:crosshair;max-width:none;border:1px solid #627089}.checker{background-color:#c6bcae;background-image:linear-gradient(45deg,#ddd5c8 25%,transparent 25%),linear-gradient(-45deg,#ddd5c8 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#ddd5c8 75%),linear-gradient(-45deg,transparent 75%,#ddd5c8 75%);background-size:12px 12px;background-position:0 0,0 6px,6px -6px,-6px 0}canvas.preview{width:96px;height:150px;image-rendering:pixelated;border-radius:5px}.previews{display:flex;gap:14px;justify-content:center}.preview-label{text-align:center;font-size:12px;color:var(--muted);margin-top:5px}#film{display:flex;gap:6px;overflow:auto;width:100%;padding:3px}#film button{padding:4px;flex-shrink:0}#film canvas{width:32px;height:50px;image-rendering:pixelated;display:block}.hint{font-size:12px;color:var(--muted)}.divider{height:1px;background:var(--line);margin:15px 0}.check{display:flex;gap:8px;align-items:flex-start;color:var(--ink);font-size:13px}.check input{margin-top:4px}.full{width:100%;margin-bottom:7px}#status{min-height:22px;color:var(--accent);font-size:12px;text-align:center}.danger{border-color:#865454}footer{padding:10px 24px 25px;text-align:center;color:var(--muted);font-size:12px}.note{padding:10px;background:#242c37;border-radius:7px;font-size:12px;color:#cbd1dc}.error{color:#ffaaaa!important}a{color:var(--accent)}@media(max-width:1050px){main{grid-template-columns:230px 1fr}.right{grid-column:1/-1;grid-template-columns:1fr 1fr}.canvas-panel{min-width:0}}@media(max-width:650px){header{padding:16px}main{display:flex;flex-direction:column;padding:12px}.left{order:1}.canvas-panel{order:2}.right{order:3;display:grid;grid-template-columns:1fr}.tools{grid-template-columns:repeat(4,1fr)}.board-wrap{padding:6px}.badge{display:none}}
+</style>
+</head><body>
+<header><div><div class="eyebrow">OUR OFFICE / PIXEL WORKSHOP</div><h1>사무실 캐릭터 도트 편집실</h1><div class="sub">직원·식당 직원·방문객 선택 · 원본 32 × 50px 그대로 편집</div></div><span class="badge">시안 편집 전용 · 게임 자동 반영 없음</span></header>
+<main>
+<aside class="stack left">
+<section class="panel"><h2>01. 편집할 캐릭터</h2><label for="character">캐릭터</label><select id="character"></select><p id="character-info" class="hint"></p><label for="version">시작 버전</label><select id="version"></select><label for="direction">방향</label><select id="direction"><option value="2">뒷모습 · 오른쪽 위 (NE)</option><option value="3">뒷모습 · 왼쪽 위 (NW)</option><option value="0">앞모습 · 오른쪽 아래 (SE)</option><option value="1">앞모습 · 왼쪽 아래 (SW)</option></select><label for="pose">동작</label><select id="pose"><option value="idle">서 있기</option><option value="walk">걷기</option><option value="sit">앉기</option><option value="type">타이핑</option><option value="eat">먹기</option></select><label for="frame">프레임</label><select id="frame"></select><div class="divider"></div><label class="check"><input id="mirror" type="checkbox" checked>반대 방향도 좌우 대칭으로 함께 수정</label><div class="hint">NE ↔ NW, SE ↔ SW. 다른 동작은 자동으로 바뀌지 않습니다.</div></section>
+<section class="panel"><h2>02. 도구와 색</h2><div class="tools"><button data-tool="pencil" class="active">연필 B</button><button data-tool="eraser">지우개 E</button><button data-tool="fill">채우기 F</button><button data-tool="picker">색 추출 I</button></div><label>현재 색 · RGB</label><div class="row"><input id="color" aria-label="그릴 색" type="color" value="#d9777a"><input id="hex" aria-label="색상 HEX" type="text" value="#d9777a" maxlength="7"></div><div id="palette" class="palette" aria-label="원본에서 추출한 색상"></div><div class="divider"></div><div class="row"><button id="undo" disabled>실행 취소</button><button id="redo" disabled>다시 실행</button></div><p class="hint">드래그로 도트를 찍으세요. Alt를 누르면 임시 색 추출. Ctrl/⌘+Z는 실행 취소입니다.</p></section>
+</aside>
+<section class="panel canvas-panel"><div class="canvas-top"><h2 id="frame-title">원본 준비 중…</h2><span id="coords" class="sub">—</span></div><div class="row"><label for="zoom">확대</label><select id="zoom" style="width:86px"><option value="6">6배</option><option value="8">8배</option><option value="10" selected>10배</option><option value="12">12배</option><option value="16">16배</option></select><label class="check"><input id="grid" type="checkbox" checked>격자</label></div><div class="board-wrap"><canvas id="board" width="320" height="500" aria-label="도트 편집 캔버스"></canvas></div><div id="status" role="status">데이터를 읽고 있습니다.</div><div id="film" aria-label="동작의 프레임 목록"></div></section>
+<aside class="stack right">
+<section class="panel"><h2>03. 원본과 비교</h2><div class="previews"><div><canvas id="original" class="preview checker" width="32" height="50"></canvas><div class="preview-label">선택 버전 원본</div></div><div><canvas id="edited" class="preview checker" width="32" height="50"></canvas><div class="preview-label">편집 결과</div></div></div><label class="check"><input id="animate" type="checkbox">현재 동작을 애니메이션으로 보기</label><div class="divider"></div><button id="copy-head" class="full">머리 수정 → 같은 방향 모든 동작</button><p class="hint">원본 대비 바뀐 머리 도트만 복사합니다. 걷기·숨쉬기의 1px 높이 차이를 보정하고, 눈 깜빡임·몸통은 유지합니다. 실행 취소 가능합니다.</p><button id="reset" class="full danger">현재 프레임을 원본으로 되돌리기</button></section>
+<section class="panel"><h2>04. 저장과 전달</h2><button id="export-project" class="full primary">편집 파일 저장 (.json)</button><button id="export-png" class="full">현재 프레임 PNG</button><button id="export-sheet" class="full">전체 스프라이트 시트 PNG</button><button id="import" class="full">편집 파일 / PNG 열기</button><input id="file" type="file" accept=".json,.txt,.png,application/json,text/plain,image/png" hidden><div class="divider"></div><button id="save-local" class="full">이 브라우저에 임시 저장</button><button id="restore-local" class="full">임시 저장 다시 열기</button><p id="dirty" class="hint">수정된 프레임 0개</p><div class="note">수정 후 <b>편집 파일(.json)</b>을 내려받아 대화에 첨부해 주세요. 프레임·방향 정보를 그대로 받아 게임 반영을 진행할 수 있습니다. 원본·캐릭터 ID도 JSON에 포함되어 나중에 다시 열 수 있습니다. 임시 저장은 캐릭터별로 이 브라우저에 보관됩니다.</div></section>
+</aside>
+</main><footer><button id="download-editor">편집실 통째로 저장 (오프라인 HTML)</button><br>데이터는 기기 안에서만 편집됩니다. 네트워크 업로드·게임 저장 덮어쓰기를 하지 않습니다.</footer>
+<script src="sprite-editor-data.js?v=cfaf557a1cf4"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const source = window.SPRITE_CATALOG;
+const W = 32, H = 50, STORAGE = 'our-office-sprite-editor-v2:';
+const characters = new Map(), decoded = new Map();
+let versions = new Map(), busy = false;
+let state = null, tool = 'pencil', color = '#d9777a', history = [], future = [];
+let transaction = null, drawing = false, lastPoint = null, previewClock = 0, previewIndex = 0;
+const board = $('board'), ctx = board.getContext('2d');
+const scratch = document.createElement('canvas'); scratch.width = W; scratch.height = H;
+const sctx = scratch.getContext('2d', {willReadFrequently:true});
+const bytesEqual = (a,b) => a.length === b.length && a.every((v,i) => v === b[i]);
+const hexOf = p => '#' + [...p.slice(0,3)].map(v => v.toString(16).padStart(2,'0')).join('');
+const rgba = () => [...color.slice(1).match(/../g).map(v => parseInt(v,16)),255];
+const current = () => state.frames.get(`${$('pose').value}_${$('direction').value}:${$('frame').value || 0}`);
+const poseFrames = () => [...state.frames.values()].filter(f => f.animation === `${$('pose').value}_${$('direction').value}`);
+const dirtyFrames = () => [...state.frames.values()].filter(f => !bytesEqual(f.pixels,f.original));
+function status(message, error=false) { $('status').textContent=message; $('status').classList.toggle('error',error); }
+function imageData(pixels) { return new ImageData(new Uint8ClampedArray(pixels),W,H); }
+function nativeCanvas(pixels) { const c=document.createElement('canvas'); c.width=W;c.height=H;c.getContext('2d').putImageData(imageData(pixels),0,0);return c; }
+async function decodePNG(url) {
+  if(typeof url!=='string' || !url.startsWith('data:image/png;base64,') || url.length>2000000) throw Error('올바른 PNG 데이터가 아닙니다.');
+  const img=new Image(); img.src=url; await img.decode();
+  if(img.naturalWidth!==W || img.naturalHeight!==H) throw Error('PNG는 원본 크기 32 × 50px이어야 합니다.');
+  sctx.clearRect(0,0,W,H);sctx.drawImage(img,0,0);return new Uint8ClampedArray(sctx.getImageData(0,0,W,H).data);
+}
+function setColor(value) {
+  if(!/^#[0-9a-f]{6}$/i.test(value)) { status('색은 #RRGGBB 형식으로 입력하세요.',true); return; }
+  color=value.toLowerCase();$('color').value=color;$('hex').value=color;
+  document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('selected',b.dataset.color===color));
+}
+function setTool(value) { tool=value;document.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('active',b.dataset.tool===tool)); }
+function updateHistory() { $('undo').disabled=!history.length; $('redo').disabled=!future.length; $('dirty').textContent=`수정된 프레임 ${dirtyFrames().length}개 · 버전: ${state.label}`; }
+function palette() {
+  const counts=new Map();for(const f of state.frames.values()) for(let i=0;i<f.original.length;i+=4) if(f.original[i+3]===255) {
+    const hex=hexOf(f.original.slice(i,i+4));counts.set(hex,(counts.get(hex)||0)+1);
+  }
+  $('palette').replaceChildren();
+  [...counts].sort((a,b)=>b[1]-a[1]).slice(0,35).forEach(([hex])=>{
+    const b=document.createElement('button');b.className='swatch';b.style.background=hex;b.dataset.color=hex;b.title=hex;b.setAttribute('aria-label',`색 ${hex}`);b.onclick=()=>setColor(hex);$('palette').append(b);
+  });setColor(color);
+}
+function setBusy(value) {
+  busy=value;document.querySelectorAll('button,select,input').forEach(c=>c.disabled=value);
+  if(!value&&state)updateHistory();
+}
+async function runBusy(work) {
+  if(busy)return;finishStroke();setBusy(true);
+  try{return await work();}catch(e){status(e.message,true);}finally{setBusy(false);}
+}
+async function versionFrames(character,id) {
+  const cacheKey=`${character}:${id}`;
+  if(decoded.has(cacheKey))return decoded.get(cacheKey);
+  const v=characters.get(character)?.versions.find(v=>v.id===id);
+  if(!v)throw Error('캐릭터 또는 원본 버전을 찾을 수 없습니다.');
+  const frames=[];for(const f of v.frames)frames.push({...f,pixels:await decodePNG(f.png)});
+  const result={...v,frames};decoded.set(cacheKey,result);return result;
+}
+function characterOptions() {
+  $('character').replaceChildren();const groups=new Map();
+  for(const c of characters.values()) {
+    if(!groups.has(c.group)){const group=document.createElement('optgroup');group.label=c.group;groups.set(c.group,group);$('character').append(group);}
+    groups.get(c.group).append(new Option(`${c.name} · ${c.variant||c.animal||c.role} (${c.id})`,c.id));
+  }
+}
+function applyVersion(character,v) {
+  const person=characters.get(character);
+  versions=new Map(person.versions.map(v=>[v.id,v]));
+  if(!versions.has(v.id)||versions.get(v.id).revision!==v.revision)versions.set(v.id,{...v,label:`파일에 포함된 원본 · ${v.label}`});
+  $('version').replaceChildren();for(const item of versions.values())$('version').add(new Option(item.label,item.id));
+  state={character,name:person.name,id:v.id,label:v.label,revision:v.revision,
+    frames:new Map(v.frames.map(f=>[f.key,{...f,original:new Uint8ClampedArray(f.pixels),pixels:new Uint8ClampedArray(f.pixels)}]))};
+  history=[];future=[];transaction=null;previewClock=0;previewIndex=0;
+  $('animate').checked=false;$('character').value=character;$('version').value=v.id;
+  $('character-info').textContent=`${person.group} · ${person.role} · ${person.animal} · 80개 프레임 / 4방향`;
+  palette();selectAnimation();updateHistory();
+}
+async function chooseVersion(id,character=state.character) { applyVersion(character,await versionFrames(character,id)); }
+function confirmReplace(message) {
+  finishStroke();return !dirtyFrames().length||confirm(message+' 먼저 JSON으로 저장했나요?');
+}
+function selectAnimation() {
+  finishStroke();$('frame').replaceChildren();
+  for(const f of poseFrames()) $('frame').add(new Option(`${f.index+1} / ${poseFrames().length}`,String(f.index)));
+  previewClock=0;previewIndex=0;renderFilm();render();
+}
+function renderFilm() {
+  $('film').replaceChildren();for(const f of poseFrames()) {
+    const button=document.createElement('button');button.title=`프레임 ${f.index+1}`;button.setAttribute('aria-label',button.title);button.dataset.frame=String(f.index);
+    const c=nativeCanvas(f.pixels);c.className='checker';button.append(c);button.onclick=()=>{finishStroke();$('frame').value=String(f.index);render();};$('film').append(button);
+  }
+}
+function render() {
+  if(!state)return;const f=current();if(!f)return;const scale=Number($('zoom').value);
+  board.width=W*scale;board.height=H*scale;ctx.imageSmoothingEnabled=false;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){ctx.fillStyle=(x+y)%2?'#cdc3b5':'#e0d7c9';ctx.fillRect(x*scale,y*scale,scale,scale);}
+  ctx.drawImage(nativeCanvas(f.pixels),0,0,board.width,board.height);
+  if($('grid').checked){ctx.strokeStyle='rgba(36,42,53,.22)';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<=W;x++){ctx.moveTo(x*scale+.5,0);ctx.lineTo(x*scale+.5,H*scale);}for(let y=0;y<=H;y++){ctx.moveTo(0,y*scale+.5);ctx.lineTo(W*scale,y*scale+.5);}ctx.stroke();}
+  $('frame-title').textContent=`${$('pose').selectedOptions[0].text} · 프레임 ${f.index+1}`;
+  if(!$('animate').checked) renderPreviews(f);
+  $('film').querySelectorAll('button').forEach(b=>{b.classList.toggle('active',b.dataset.frame===$('frame').value);const target=state.frames.get(`${f.animation}:${b.dataset.frame}`);b.firstChild.getContext('2d').putImageData(imageData(target.pixels),0,0);});updateHistory();
+}
+function renderPreviews(f) { $('original').getContext('2d').putImageData(imageData(f.original),0,0);$('edited').getContext('2d').putImageData(imageData(f.pixels),0,0); }
+function beginChange() { transaction=new Map(); }
+function touch(f) { if(!transaction.has(f.key))transaction.set(f.key,new Uint8ClampedArray(f.pixels)); }
+function rawPixel(f,x,y,p) { if(x<0||x>=W||y<0||y>=H)return;touch(f);f.pixels.set(p,(y*W+x)*4); }
+function paintPixel(f,x,y,p) {
+  rawPixel(f,x,y,p);
+  if($('mirror').checked){const partner=state.frames.get(`${f.animation.slice(0,-1)}${f.direction^1}:${f.index}`);if(partner)rawPixel(partner,W-1-x,y,p);}
+}
+function commitChange() {
+  if(!transaction)return;const changes=[];
+  for(const [key,before] of transaction){const after=state.frames.get(key).pixels;if(!bytesEqual(before,after))changes.push({key,before,after:new Uint8ClampedArray(after)});}
+  transaction=null;if(changes.length){history.push(changes);if(history.length>100)history.shift();future=[];}render();
+}
+function finishStroke() { if(drawing){drawing=false;lastPoint=null;commitChange();} }
+function undo() { finishStroke();const changes=history.pop();if(!changes)return;for(const c of changes)state.frames.get(c.key).pixels=new Uint8ClampedArray(c.before);future.push(changes);render(); }
+function redo() { finishStroke();const changes=future.pop();if(!changes)return;for(const c of changes)state.frames.get(c.key).pixels=new Uint8ClampedArray(c.after);history.push(changes);render(); }
+function pixelAt(e) { const r=board.getBoundingClientRect();return {x:Math.floor((e.clientX-r.left)*W/r.width),y:Math.floor((e.clientY-r.top)*H/r.height)}; }
+function pick(point) { const p=current().pixels.slice((point.y*W+point.x)*4,(point.y*W+point.x)*4+4);if(p[3]===0){status('투명 도트입니다. 지우개로 투명하게 만들 수 있습니다.');return;}setColor(hexOf(p));status(`추출한 색 ${color}`); }
+function line(a,b,callback) { let x=a.x,y=a.y;const dx=Math.abs(b.x-x),dy=-Math.abs(b.y-y),sx=x<b.x?1:-1,sy=y<b.y?1:-1;let err=dx+dy;while(true){callback(x,y);if(x===b.x&&y===b.y)break;const e=err*2;if(e>=dy){err+=dy;x+=sx;}if(e<=dx){err+=dx;y+=sy;}} }
+function flood(point) {
+  const f=current(),start=(point.y*W+point.x)*4,target=[...f.pixels.slice(start,start+4)],p=rgba();if(target.every((v,i)=>v===p[i]))return;
+  const queue=[point],seen=new Set();while(queue.length){const q=queue.pop();if(q.x<0||q.x>=W||q.y<0||q.y>=H)continue;const index=q.y*W+q.x;if(seen.has(index))continue;seen.add(index);const at=index*4;
+    if(!target.every((v,i)=>f.pixels[at+i]===v))continue;paintPixel(f,q.x,q.y,p);queue.push({x:q.x+1,y:q.y},{x:q.x-1,y:q.y},{x:q.x,y:q.y+1},{x:q.x,y:q.y-1});
+  }
+}
+board.addEventListener('pointerdown',e=>{
+  if(!state||busy||e.button!==0)return;e.preventDefault();const p=pixelAt(e);if(p.x<0||p.x>=W||p.y<0||p.y>=H)return;
+  if(tool==='picker'||e.altKey){pick(p);return;}$('animate').checked=false;beginChange();
+  if(tool==='fill'){flood(p);commitChange();return;}
+  drawing=true;lastPoint=p;board.setPointerCapture(e.pointerId);paintPixel(current(),p.x,p.y,tool==='eraser'?[0,0,0,0]:rgba());render();
+});
+board.addEventListener('pointermove',e=>{const p=pixelAt(e);$('coords').textContent=`x ${p.x} · y ${p.y}`;if(!drawing||p.x<0||p.x>=W||p.y<0||p.y>=H)return;line(lastPoint,p,(x,y)=>paintPixel(current(),x,y,tool==='eraser'?[0,0,0,0]:rgba()));lastPoint=p;render();});
+board.addEventListener('pointerup',finishStroke);board.addEventListener('pointercancel',finishStroke);board.addEventListener('lostpointercapture',finishStroke);
+function bob(f) { const pose=f.animation.split('_')[0];return pose==='idle'?f.index%2:pose==='walk'?(f.index%2===0?1:0):0; }
+function copyHead() {
+  finishStroke();const f=current(),deltas=[];
+  for(let y=2;y<29;y++)for(let x=0;x<W;x++){const i=(y*W+x)*4;if(!bytesEqual(f.pixels.slice(i,i+4),f.original.slice(i,i+4)))deltas.push({x,y,p:f.pixels.slice(i,i+4),original:f.original.slice(i,i+4)});}
+  if(!deltas.length){status('복사할 머리 수정이 없습니다.');return;}
+  if(!confirm('바뀐 머리 도트를 같은 방향 모든 동작에 복사할까요? 눈 깜빡임처럼 원본이 다른 도트는 건너뜁니다.'))return;
+  beginChange();let count=0,skipped=0;
+  for(const target of state.frames.values()){if(target.direction!==f.direction||target.key===f.key)continue;for(const d of deltas){const y=d.y+bob(f)-bob(target);if(y<0||y>=29){skipped++;continue;}const i=(y*W+d.x)*4;
+    if(bytesEqual(target.original.slice(i,i+4),d.original)){paintPixel(target,d.x,y,d.p);count++;}else skipped++;
+  }}commitChange();status(`머리 도트 ${count}개 복사 · 원본이 다른 ${skipped}개는 유지했습니다.`);
+}
+function project() {
+  finishStroke();return {schema:'our-office-sprite-edit-v2',character:state.character,name:state.name,width:W,height:H,version:state.id,
+    base:{id:state.id,label:state.label,revision:state.revision,frames:[...state.frames.values()].map(f=>({key:f.key,animation:f.animation,index:f.index,direction:f.direction,duration:f.duration,fps:f.fps,pixels:Array.from(f.original)}))},
+    selection:{pose:$('pose').value,direction:Number($('direction').value),frame:Number($('frame').value)},
+    frames:dirtyFrames().map(f=>({key:f.key,pixels:Array.from(f.pixels)}))};
+}
+let savedState='';
+function download(blob,name) { const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000); }
+function exportProject() { const data=project();savedState=JSON.stringify(data);download(new Blob([savedState],{type:'application/json'}),`${state.character}_${state.id}_edits.json`);status(`${state.name} 편집 파일을 저장했습니다. 수정된 프레임 ${data.frames.length}개와 원본이 들어 있습니다. 대화에 첨부해 주세요.`); }
+function downloadEditor() {
+  const external=document.querySelector('script[src^="sprite-editor-data.js"]');
+  const tag=external?external.outerHTML:null;
+  const js='window.SPRITE_CATALOG = '+JSON.stringify(source).replace(/</g,'\\u003c')+';';
+  const markup=document.documentElement.outerHTML;
+  const html='<!doctype html>\n'+(tag?markup.replace(tag,'<script>'+js+'<'+'/script>'):markup);
+  download(new Blob([html],{type:'text/html'}),'our_office_sprite_editor.html');status('모든 캐릭터가 포함된 편집실 HTML을 저장했습니다. 편집 내용은 JSON으로 별도 저장하세요.');
+}
+function exportPNG() { finishStroke();nativeCanvas(current().pixels).toBlob(blob=>download(blob,`${state.character}_${state.id}_${current().key.replace(':','_')}.png`),'image/png');status('현재 프레임을 투명 배경 32 × 50px PNG로 저장했습니다.'); }
+function exportSheet() {
+  finishStroke();const animations=[...new Set([...state.frames.values()].map(f=>f.animation))],cols=Math.max(...animations.map(a=>[...state.frames.values()].filter(f=>f.animation===a).length));
+  const c=document.createElement('canvas');c.width=cols*W;c.height=animations.length*H;const cx=c.getContext('2d');
+  animations.forEach((a,row)=>[...state.frames.values()].filter(f=>f.animation===a).forEach(f=>cx.drawImage(nativeCanvas(f.pixels),f.index*W,row*H)));
+  c.toBlob(blob=>download(blob,`${state.character}_${state.id}_sheet.png`),'image/png');status('원본 해상도의 전체 시트를 저장했습니다. 게임 반영용으로는 JSON도 함께 저장해 주세요.');
+}
+const frameCounts={idle:2,walk:4,sit:2,eat:5,type:7};
+const validPixels=p=>Array.isArray(p)&&p.length===W*H*4&&p.every(v=>Number.isInteger(v)&&v>=0&&v<=255);
+function validateFrames(frames,full=false) {
+  if(!Array.isArray(frames)||frames.length>(80)|| (full&&frames.length!==80))throw Error('프레임 개수가 잘못되었습니다.');
+  const seen=new Set();
+  for(const f of frames) {
+    const match=typeof f?.key==='string'&&/^(idle|walk|sit|eat|type)_([0-3]):([0-6])$/.exec(f.key);
+    if(!match||Number(match[3])>=frameCounts[match[1]]||seen.has(f.key)||!validPixels(f.pixels))throw Error('프레임 데이터가 잘못되었습니다. 파일은 적용하지 않았습니다.');
+    if(full&&(f.animation!==`${match[1]}_${match[2]}`||f.index!==Number(match[3])||f.direction!==Number(match[2])||!Number.isFinite(f.duration)||f.duration<=0||f.duration>60||!Number.isFinite(f.fps)||f.fps<=0||f.fps>60))throw Error('원본 프레임 정보가 잘못되었습니다.');
+    seen.add(f.key);
+  }
+}
+function validateProject(data) {
+  if(!data||!['our-office-sprite-edit-v1','our-office-sprite-edit-v2'].includes(data.schema)||typeof data.character!=='string'||!/^[a-z0-9_]{1,64}$/.test(data.character)||data.width!==W||data.height!==H)throw Error('지원하는 캐릭터 편집 JSON 파일이 아닙니다.');
+  validateFrames(data.frames);
+  if(data.schema==='our-office-sprite-edit-v1') {
+    if(data.character!=='leenote'||!['previous','latest','production'].includes(data.version))throw Error('이전 이노트 파일의 버전을 찾을 수 없습니다.');
+  } else {
+    const b=data.base;
+    if(!b||typeof b.id!=='string'||!/^[a-z0-9_-]{1,64}$/.test(b.id)||data.version!==b.id||typeof b.revision!=='string'||!/^[a-f0-9]{64}$/.test(b.revision)||typeof b.label!=='string'||b.label.length>120||typeof data.name!=='string'||data.name.length>80)throw Error('파일에 포함된 원본 정보가 잘못되었습니다.');
+    validateFrames(b.frames,true);
+  }
+  return data;
+}
+async function loadProject(data) {
+  validateProject(data);if(!confirmReplace('파일의 편집 내용으로 바꿉니다.'))return false;
+  const base=data.schema==='our-office-sprite-edit-v1'?await versionFrames('leenote',data.version):data.base;
+  if(!characters.has(data.character)) {
+    characters.set(data.character,{id:data.character,name:data.name,group:'파일의 캐릭터',role:'',animal:'',versions:[base]});
+    decoded.set(`${data.character}:${base.id}`,base);characterOptions();
+  }
+  applyVersion(data.character,base);for(const f of data.frames)state.frames.get(f.key).pixels=new Uint8ClampedArray(f.pixels);
+  if(data.selection&&['idle','walk','sit','type','eat'].includes(data.selection.pose)&&[0,1,2,3].includes(data.selection.direction)){
+    $('pose').value=data.selection.pose;$('direction').value=String(data.selection.direction);selectAnimation();
+    if(Number.isInteger(data.selection.frame)&&poseFrames().some(f=>f.index===data.selection.frame))$('frame').value=String(data.selection.frame);
+  }
+  render();savedState=JSON.stringify(project());status(`편집 파일을 열었습니다. 수정된 프레임 ${data.frames.length}개.`);return true;
+}
+async function importFile(file) {
+  if(!file)return;if(file.size>20000000)throw Error('파일은 20MB 이하여야 합니다.');
+  if(/\.(json|json\.txt|txt)$/i.test(file.name))return loadProject(JSON.parse(await file.text()));
+  if(!file.name.toLowerCase().endsWith('.png'))throw Error('JSON 또는 32 × 50px PNG를 선택하세요.');
+  const reader=new FileReader();const url=await new Promise((resolve,reject)=>{reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('파일 읽기 실패'));reader.readAsDataURL(file);});
+  const pixels=await decodePNG(url);if(!confirm('현재 프레임을 선택한 PNG로 바꿀까요? 반대 방향 동시 수정 설정도 적용됩니다.'))return;
+  beginChange();for(let y=0;y<H;y++)for(let x=0;x<W;x++)paintPixel(current(),x,y,pixels.slice((y*W+x)*4,(y*W+x)*4+4));commitChange();status('PNG를 현재 프레임에 적용했습니다. 실행 취소할 수 있습니다.');
+}
+function resetFrame() { finishStroke();if(!confirm('현재 프레임을 선택 버전 원본으로 되돌릴까요? 반대 방향 동시 수정 설정도 적용됩니다.'))return;beginChange();const f=current();for(let y=0;y<H;y++)for(let x=0;x<W;x++)paintPixel(f,x,y,f.original.slice((y*W+x)*4,(y*W+x)*4+4));commitChange();status('현재 프레임을 원본으로 되돌렸습니다.'); }
+$('character').onchange=()=>{const id=$('character').value;if(!confirmReplace('캐릭터를 바꾸면 현재 편집이 초기화됩니다.')){$('character').value=state.character;return;}runBusy(async()=>{await chooseVersion(characters.get(id).versions[0].id,id);savedState='';status(`${state.name} 원본을 열었습니다.`);});};
+$('version').onchange=()=>{const id=$('version').value;if(!confirmReplace('버전을 바꾸면 현재 편집이 초기화됩니다.')){$('version').value=state.id;return;}runBusy(async()=>{await chooseVersion(id);savedState='';status('선택 버전의 원본을 열었습니다.');});};
+$('pose').onchange=selectAnimation;$('direction').onchange=selectAnimation;$('frame').onchange=()=>{finishStroke();render();};$('zoom').onchange=render;$('grid').onchange=render;
+$('animate').onchange=()=>{previewClock=0;previewIndex=0;render();};$('color').oninput=e=>setColor(e.target.value);$('hex').onchange=e=>setColor(e.target.value);
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{finishStroke();setTool(b.dataset.tool);});
+$('undo').onclick=undo;$('redo').onclick=redo;$('copy-head').onclick=copyHead;$('reset').onclick=resetFrame;
+$('export-project').onclick=exportProject;$('export-png').onclick=exportPNG;$('export-sheet').onclick=exportSheet;$('import').onclick=()=>$('file').click();
+$('file').onchange=async e=>{const file=e.target.files[0];await runBusy(()=>importFile(file));e.target.value='';};
+$('download-editor').onclick=downloadEditor;
+$('save-local').onclick=()=>{try{const data=JSON.stringify(project());localStorage.setItem(STORAGE+state.character,data);savedState=data;status(`${state.name} 편집을 이 브라우저에 임시 저장했습니다. 중요한 작업은 JSON으로도 내려받으세요.`);}catch(e){status('임시 저장 공간을 사용할 수 없습니다. JSON으로 저장하세요.',true);}};
+$('restore-local').onclick=()=>runBusy(async()=>{const data=localStorage.getItem(STORAGE+state.character)||(state.character==='leenote'?localStorage.getItem('our-office-leenote-editor-v1'):null);if(!data){status('이 캐릭터의 임시 저장된 편집이 없습니다.');return;}await loadProject(JSON.parse(data));});
+document.addEventListener('keydown',e=>{if(!state||busy||['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName))return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();return;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();redo();return;}if(e.ctrlKey||e.metaKey)return;const t={b:'pencil',e:'eraser',f:'fill',i:'picker'}[e.key.toLowerCase()];if(t){finishStroke();setTool(t);}});
+window.addEventListener('beforeunload',e=>{if(state&&dirtyFrames().length&&JSON.stringify(project())!==savedState){e.preventDefault();e.returnValue='';}});
+let previousTime=0;
+function animate(time) { if(state&&$('animate').checked){const frames=poseFrames();const f=frames[previewIndex%frames.length];previewClock+=(time-previousTime)/1000;if(previewClock>=f.duration/f.fps){previewIndex=(previewIndex+1)%frames.length;previewClock=0;}renderPreviews(frames[previewIndex]);}previousTime=time;requestAnimationFrame(animate); }
+async function init() {
+  setBusy(true);
+  try{
+    if(!source||source.schema!=='our-office-sprite-catalog-v2'||source.width!==W||source.height!==H||!Array.isArray(source.characters))throw Error('편집기 원본 데이터가 없습니다. HTML과 데이터 파일을 함께 열어 주세요.');
+    for(const person of source.characters)characters.set(person.id,person);
+    characterOptions();const query=new URLSearchParams(location.search);
+    const character=characters.has(query.get('character'))?query.get('character'):'leenote';
+    const requested=query.get('version');const version=characters.get(character).versions.some(v=>v.id===requested)?requested:'current';
+    await chooseVersion(version,character);setBusy(false);status(`${characters.size}개 캐릭터를 선택할 수 있습니다. JSON으로 저장한 수정본은 나중에 다시 열 수 있습니다.`);requestAnimationFrame(animate);
+  }catch(e){status(e.message,true);}
+}
+init();
+</script></body></html>
