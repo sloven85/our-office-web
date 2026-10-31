@@ -1,0 +1,21 @@
+# 끄적끄적문구 사무실 서버 — 게임을 화면 없이 돌린다 (godot/scripts/net/Net.gd)
+# setup.sh 가 /etc/systemd/system/ 에 깐다.
+[Unit]
+Description=Our-office game server (headless Godot)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=office
+Group=office
+WorkingDirectory=/opt/office
+Environment=HOME=/opt/office
+ExecStart=/opt/office/godot --headless --main-pack /opt/office/index.pck -- --server
+# 죽으면 5초 뒤 다시 켠다
+Restart=always
+RestartSec=5
+# 끌 때 저장을 올릴 틈을 준다
+TimeoutStopSec=15
+
+[Install]
+WantedBy=multi-user.target
