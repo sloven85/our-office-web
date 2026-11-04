@@ -1,0 +1,5 @@
+# 보안 연결(wss://)을 붙이는 문지기. 인증서는 Caddy 가 Let's Encrypt 에서 알아서 받는다.
+# __HOST__ 는 setup.sh 가 이 VM 의 고정 IP 로 채운다 (예: 34-64-12-34.sslip.io).
+__HOST__ {
+	reverse_proxy 127.0.0.1:8080
+}
