@@ -1,0 +1,8 @@
+# 새 게임 빌드가 올라왔으면 받아서 서버를 다시 켠다 (update.sh)
+[Unit]
+Description=Our-office game server updater
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/office/update.sh
